@@ -48,7 +48,7 @@ export default function EnterProjectDetails({
       </div>
       <div>
         <p>Description</p>
-        <input type="text" ref={description} required />
+        <input type="text" ref={description} className="w-[37rem]" required />
       </div>
       <div>
         <p>Date</p>

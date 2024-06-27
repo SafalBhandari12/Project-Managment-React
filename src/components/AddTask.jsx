@@ -5,13 +5,23 @@ export default function AddTask({
   handleSaveProjectButton,
   ioClickedProject,
 }) {
-  let index = ioClickedProject[1];
+  let userDataIndex = ioClickedProject[1];
   let taskInput = useRef();
-  function handleClick(index, task) {
-    handleSaveProjectButton({ index: index, task: task });
+
+  function handleAddNewTask(userDataIndex, task) {
+    let newTasks = [...userData.task, task];
+    handleSaveProjectButton({ index: userDataIndex, task: newTasks });
+    taskInput.current.value = "";
+  }
+  function handleDeleteTask(index) {
+    let newTasks = [...userData.task].filter((task, idx) => {
+      return idx != index;
+    });
+    console.log(index, newTasks);
+    handleSaveProjectButton({ index: userDataIndex, task: newTasks });
   }
   return (
-    <>
+    <div className="p-6">
       <div>
         <h1>{userData.title}</h1>
         <h3>{userData.description}</h3>
@@ -20,10 +30,26 @@ export default function AddTask({
       <div>
         <h1>Tasks</h1>
         <input type="text" className="mr-4" ref={taskInput} />
-        <button onClick={() => handleClick(index, taskInput.current.value)}>
+        <button
+          onClick={() =>
+            handleAddNewTask(userDataIndex, taskInput.current.value)
+          }
+        >
           Add task
         </button>
       </div>
-    </>
+      <div className="flex flex-col-reverse items-start">
+        {userData.task.map((task, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              handleDeleteTask(index);
+            }}
+          >
+            {task}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

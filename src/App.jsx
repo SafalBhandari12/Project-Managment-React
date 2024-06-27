@@ -31,10 +31,13 @@ function App() {
       ]);
       handleClickProjectButton();
     } else if (typeof task !== "undefined") {
-      console.log(index, task);
+      setUserData((prevData) => {
+        let newData = [...prevData];
+        newData[index].task = task;
+        return newData;
+      });
     }
   }
-  console.log(userData);
 
   return (
     <div className="flex ">
