@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import ContentArea from "./components/ContentArea";
+import Menu from "./components/Menu";
 
 function App() {
-  const [count, setCount] = useState(0)
+  // This state is used to check if the user clicked the add project button or not. The value is then sent to the contentArea and on the basis of the boolean value the content is displayed dynamically.
+  const [isAddingProject, setIsAddingProject] = useState(false);
+
+  const [userData, setUserData] = useState([]);
+
+  // This state is to check if used clicked the project that was created and also have the index of the button clicked
+  const [ioClickedProject, setIOClickedProject] = useState([false, undefined]);
+
+  // If the user has clicked certain project it holds the index of that button and sets value to true which opens the window allowing for user to enter the new tasks
+  function handleioClickedProject(index) {
+    setIOClickedProject((prevValue) => [!prevValue[0], index]);
+  }
+
+  // When the button is clicked isAddingProject is true hence the enter project detial templates work
+  function handleClickProjectButton() {
+    setIsAddingProject((prevValue) => !prevValue);
+  }
+
+  // When save is clicked on the enter project details component the details of the project is saved
+  function handleSaveProjectButton({ title, description, date, index, task }) {
+    console.log(title, description, date, index, task);
+    if (typeof index == "undefined") {
+      setUserData((prevData) => [
+        ...prevData,
+        { title, description, date, task: [] },
+      ]);
+      handleClickProjectButton();
+    } else if (typeof task !== "undefined") {
+      console.log(index, task);
+    }
+  }
+  console.log(userData);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="flex ">
+      <Menu
+        handleClickProjectButton={handleClickProjectButton}
+        userData={userData}
+        handleioClickedProject={handleioClickedProject}
+      />
+      <ContentArea
+        isAddingProject={isAddingProject}
+        handleSaveProjectButton={handleSaveProjectButton}
+        handleCancelProjectButton={handleClickProjectButton}
+        ioClickedProject={ioClickedProject}
+        userData={userData[ioClickedProject[1]]}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
